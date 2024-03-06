@@ -2,6 +2,7 @@ package com.client.sample.controller;
 
 import com.client.sample.model.Client;
 import com.client.sample.repo.ClientRepo;
+import com.client.sample.service.ClientService;
 //import com.client.sample.validation.ClientValidation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class ClientController {
 
     @Autowired
     private ClientRepo clientRepo;
+
+    @Autowired
+    private ClientService clientService;
 
     // @Autowired
     // private ClientValidation clientValidation;
@@ -32,7 +36,7 @@ public class ClientController {
 
     }
 
-    @GetMapping("/getClient/{email}")
+    @GetMapping("/getClientbyEmail/{email}")
     public ResponseEntity<Client> getClientByEmail(@PathVariable String email) {
 
         Client clientObj = clientRepo.findByEmail(email);
@@ -47,12 +51,9 @@ public class ClientController {
     @PostMapping("/addClient")
     public ResponseEntity<Client> addClientData(@RequestBody Client client) {
         try {
-            Boolean isValid = true;// clientValidation.validateData(client);
-            if (isValid) {
-                Client clientObj = clientRepo.save(client);
-                return new ResponseEntity<>(clientObj, HttpStatus.CREATED);
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            Client clientObj = clientRepo.save(client);
+            return new ResponseEntity<>(clientObj, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -85,7 +86,7 @@ public class ClientController {
 
     }
 
-    @PutMapping("/updateClient/{email}")
+    @PutMapping("/updateClientbyEmail/{email}")
     public ResponseEntity<Client> updateClientDataByEmail(@PathVariable String email, @RequestBody Client client) {
         try {
 
@@ -124,12 +125,12 @@ public class ClientController {
 
     }
 
-    @DeleteMapping("/deleteClient/{email}")
+    @DeleteMapping("/deleteClientbyEmail/{email}")
     public ResponseEntity<HttpStatus> deleteClientDatabyEmail(@PathVariable String email) {
 
         try {
 
-            clientRepo.deleteByEmail(email);
+            clientService.deleteByEmail(email);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

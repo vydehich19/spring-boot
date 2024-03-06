@@ -9,6 +9,4 @@ import com.client.sample.model.Client;
 public interface ClientRepo extends JpaRepository<Client, Long> {
 
     Client findByEmail(String email);
-
-    Client deleteByEmail(String email);
 }
